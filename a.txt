@@ -1,0 +1,415 @@
+# Software Engineering Internal - Set 2 Answers
+Simple explanations for all questions in the images.
+
+---
+
+## QI. Software Requirement Specification (SRS) - Food Ordering System
+
+*a. Abstract (4M)*
+- A Food Ordering System for the cafeteria lets students and faculty order food online, pay digitally, and see real-time order status. Admins can manage the menu and order types (dine-in/take-away).
+
+*b. Functional Requirements (2M)*
+- Users can view menu, place orders, and make digital payments.
+- Admins can update menu, view orders, and manage food status.
+
+*c. Non-Functional Requirements (2M)*
+- The system must be fast and reliable.
+- Data security for payments and user info is needed.
+
+*d. Identification of Users (2M)*
+- Students, faculty (customers)
+- Admin (cafeteria manager)
+
+---
+
+## QII. Maven Web Application Development (30M)
+
+*1. Artifact generated in build (2M)*
+- <finalName>Food-System</finalName> means the built WAR file will be named Food-System.war.
+- It is generated in the target folder.
+- Deploy this WAR in Tomcat's webapps folder.
+
+*2. Download repo and list files (2M)*
+- Clone: git clone https://github.com/KumbhamBhargavi75/foodsystem
+- List files: ls or dir (shows files in folder).
+
+*3. JUnit Dependency (3M)*
+- JUnit adds testing support. Maven downloads JUnit and allows running tests in your project.
+
+*4. Misspelling <artifactId> (2M)*
+- Maven will throw a build error: "Unknown artifact" or XML error.
+- Fix: Correct the tag in pom.xml.
+
+*5. <packlize> tag instead of <packaging> (2M)*
+- Maven throws an XML parsing error.
+- Debug by checking the error message and correcting the tag to <packaging>.
+
+*6. Default Maven assumptions (2M)*
+- By default, Maven uses jar packaging.
+- If you want a web app, set <packaging>war</packaging>.
+- Wrong packaging can make deployment fail.
+
+*7. MySQL connector dependency mistake (3M)*
+- Error: Dependency not found.
+- Correct coordinates:
+  xml
+  <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.30</version>
+  </dependency>
+  
+
+*8. Tomcat plugin not recognized (3M)*
+- Reason: Plugin section might be misplaced or missing <build> tag.
+- Correct location: Under <build><plugins>...</plugins></build>.
+
+*9. <url> tag in pom.xml (3M)*
+- Maven accepts the <url> tag for project homepage.
+- It does not affect the build, just project metadata.
+
+*10. Remove <dependencies> section (2M)*
+- If dependencies are removed, project may still build, but required libraries will be missing.
+- May cause runtime errors.
+
+*11. Testing issues (2M)*
+- Context path in Tomcat will be /FoodSystem-0.1-SNAPSHOT if that's the WAR name.
+- Output is the deployed web app at that path.
+
+*12. WAR name and URL (3M)*
+- If <finalName>Food-System-vxyz</finalName>, WAR file is Food-System-vxyz.war.
+- URL: localhost:8080/Food-System-vxyz
+
+*13. SNAPSHOT version (2M)*
+- SNAPSHOT means it's a development version, not a stable release.
+
+*14. Java Servlet API Dependency (2M)*
+- Add:
+  xml
+  <dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>3.1.1</version>
+  </dependency>
+  
+  - Place inside <dependencies> block in pom.xml.
+
+---
+
+## QIII. Git & GitHub Integration with Maven Project (30M)
+
+*1. Initialize Git repo (2M)*
+- Command: git init
+
+*2. Stage and commit all files (2M)*
+- git add .
+- git commit -m "Initial commit"
+
+*3. Push to GitHub (2M)*
+- Add remote: git remote add origin <repo-url>
+- Push: git push -u origin main
+
+*4. Add Order Service feature branch (3M)*
+- Create branch: git checkout -b feature-order-service
+- Push branch: git push -u origin feature-order-service
+
+*5. Checkout only branch, keep files locally (2M)*
+- git fetch origin feature-order-service
+- git checkout feature-order-service
+
+*6. Pull latest changes from remote (2M)*
+- git pull origin main
+
+*7. Merge feature branch into main (3M)*
+- git checkout main
+- git merge feature-order-service
+- git push origin main
+
+*8. Clone project for teammate (2M)*
+- git clone <repo-url>
+
+*9. Steps to copy project for teammate (3M)*
+- Clone: git clone <repo-url>
+- Checkout branch: git checkout feature-order-service
+
+*10. Push new branch to GitHub (2M)*
+- git push -u origin feature-real-time-status
+
+*11. Use SSH instead of HTTPS (3M)*
+- Generate SSH key: ssh-keygen
+- Add key to GitHub and use SSH remote URL: git remote set-url origin git@github.com:<username>/<repo>.git
+
+*12. Apply patch file and commit (3M)*
+- Apply patch: git apply fix.patch
+- Add: git add .
+- Commit: git commit -m "Applied CSS fix from patch"
+
+---
+
+## QIV. Docker containerization for Maven Application (20M)
+
+*1. Pull nginx image (2M)*
+- Command: docker pull nginx:latest
+
+*2. Run nginx with custom name and expose port (2M)*
+- docker run --name mynginx -p 8090:80 nginx:latest
+
+*3. Check host port mapped to container port (2M)*
+- Use: docker ps and check PORTS column.
+
+*4. High CPU usage in container (2M)*
+- Diagnose: docker stats to check resource usage.
+
+*5. Stop and remove container (2M)*
+- docker stop <container_id>
+- docker rm <container_id>
+
+*6. Expose internal port 5000 on host port 8080 (2M)*
+- docker run -p 8080:5000 <image-name>
+
+*7. List running containers (2M)*
+- docker ps
+
+*8. Port conflict solution (2M)*
+- Stop conflicting container: docker stop <container_id>
+- Change port mapping in docker run or config.
+
+*9. Rebuild and restart container (2M)*
+- docker build -t <image-name> .
+- docker run ... as before.
+
+*10. Check container is running (2M)*
+- docker ps (shows running containers)
+
+---
+
+## V. Docker Compose (10M)
+
+*1. Write docker-compose.yml for Food Ordering System + PostgreSQL (5M)*
+yaml
+version: '3'
+services:
+  food-ordering-system:
+    image: <your-food-ordering-system-image>
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  db:
+    image: postgres:latest
+    ports:
+      - "7078:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: food_db
+
+
+*2. Pull Maven-built image from Docker Hub (3M)*
+- docker pull <your-dockerhub-username>/<food-ordering-system-image>
+
+*3. Run PostgreSQL container and insert data (2M)*
+- Run: docker run --name food-db -e POSTGRES_USER=user -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=food_db -p 7078:5432 postgres:latest
+- Insert data: Connect using psql or application code and run SQL insert commands.
+
+---
+
+End of Answers
+
+# Software Engineering Internal - Set 1 Answers
+*Simple explanations for all questions from images 4, 5, and 6.*
+
+---
+
+## QI. Software Requirement Specification (SRS) - Campus Event Management System
+
+*a. Abstract (4M)*
+- The Campus Event Management System helps organize and participate in college events. It supports event creation, user registration, scheduling, and notifications, aiming to improve event attendance and management.
+
+*b. Functional Requirements (2M)*
+- Users can register for events, create events, and get notifications.
+- Admins can manage events, schedules, and user registrations.
+
+*c. Non-Functional Requirements (2M)*
+- The system should be reliable and fast.
+- It must keep user data secure and provide good usability.
+
+*d. Identification of Users (2M)*
+- Students (participants)
+- Faculty and administrators (event organizers)
+
+---
+
+## QII. Maven Java Application Development (30M)
+
+*1. Download repo and list files (2M)*
+- Clone: git clone https://github.com/KumbhamBhargavi75/CampusMgmtSystem
+- List files: ls or dir (shows files in folder).
+
+*2. Maven compile error (2M)*
+- If you see [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile, it means there's a problem with your code or configuration. Fix by checking pom.xml for correct plugin and Java version.
+
+*3. Source option 11 not supported (2M)*
+- If project uses JUnit 3.8.1 but Java 21 needs JUnit 4/5, update your pom.xml to use latest JUnit version (4/5).
+
+*4. JUnit version missing in dependency (3M)*
+- If no version is specified, Maven may use an old or no version. Always add a <version>4.13.2</version> or latest in the dependency to ensure correct version is used.
+
+*5. Misspelled <artifactId> (3M)*
+- If you write <artifactId>cms</artifactId> instead of correct value, Maven throws an error. Fix by correcting the spelling in pom.xml.
+
+---
+
+## QII (continued): More Maven Questions (from image 4)
+
+*6. <packing> tag instead of <packaging> (2M)*
+- Maven will throw an XML error. Correct the tag to <packaging> in pom.xml.
+
+*7. Add MySQL dependency (2M)*
+- To connect to MySQL, add in dependencies:
+  xml
+  <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.30</version>
+  </dependency>
+  
+
+*8. Add JQuery 3.6.1 (2M)*
+- JQuery is added as a web resource (not as Maven dependency). Download JQuery 3.6.1 and reference it in your HTML using <script src="jquery-3.6.1.min.js"></script>.
+
+*9. Check <artifactId> spelling for output WAR/JAR (2M)*
+- If misspelled, generated JAR/WAR will be named wrongly. Fix by correcting <artifactId> in pom.xml.
+
+*10. Change default build output directory in pom.xml (2M)*
+- In pom.xml, under <build> section add:
+  xml
+  <build>
+    <directory>new-output-dir</directory>
+  </build>
+  
+
+*11. Add JUnit 4.13.2 dependency (3M)*
+- Add in dependencies:
+  xml
+  <dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.13.2</version>
+  </dependency>
+  
+
+*12. Push updated project to GitHub and check (3M)*
+- Use git add ., git commit -m "Update", git push.
+- Check on GitHub if files are updated.
+
+---
+
+## QIII. Git & GitHub Integration with Maven Project (30M)
+
+*1. Start tracking project in Git (2M)*
+- git init
+
+*2. Save snapshot with commit message (2M)*
+- git add .
+- git commit -m "Added event registration feature"
+
+*3. See current status of files (2M)*
+- git status
+
+*4. View commit history (2M)*
+- git log
+
+*5. See all branches in repo (2M)*
+- git branch -a
+
+*6. Create new branch (2M)*
+- git checkout -b feature-branch
+
+*7. Apply patch file from teammate (2M)*
+- git apply patchfile.patch
+
+*8. New branch for online feedback (3M)*
+- git checkout -b online-feedback
+- git add .
+- git commit -m "Online feedback"
+- git push -u origin online-feedback
+
+*9. Collaborate using fork and pull request (3M)*
+- Fork repo on GitHub, clone your fork, make changes, push, and create a pull request.
+
+*10. See changes between local branch and main on GitHub (2M)*
+- git diff main..your-branch
+
+*11. Test teammate's pushed branch locally (2M)*
+- git fetch origin
+- git checkout event-feedback
+
+*12. See differences from last commit (2M)*
+- git show
+
+---
+
+## QIV. Docker Containerization for Maven JAVA Application (20M)
+
+*Task:* Containerize your Maven project using Docker.
+
+a. Refer documentation to write Dockerfile for the Maven project:  
+  https://github.com/KumbhamBhargavi75/CampusMgmtSystem/
+b. Ensure it copies the WAR/JAR and runs on Tomcat (or relevant base image).
+
+*Questions & Answers:*
+
+1. Check docker version and list all images:
+   - docker --version
+   - docker images
+2. Pull hello world image locally and run:
+   - docker pull hello-world
+   - docker run hello-world
+3. Pull ubuntu image and run:
+   - docker pull ubuntu
+   - docker run -it ubuntu
+4. Write Dockerfile for interactive mode, image name as CSIMAGE:
+   - In Dockerfile, add: FROM tomcat, copy WAR/JAR, build with docker build -t csimage .
+5. List running containers:
+   - docker ps
+6. Start and stop container:
+   - Start: docker start <container-id>
+   - Stop: docker stop <container-id>
+7. List all containers (including stopped):
+   - docker ps -a
+8. Remove a container:
+   - docker rm <container-id>
+9. Push custom Docker image:
+   - docker tag csimage yourdockerhub/csimage
+   - docker push yourdockerhub/csimage
+10. Check container status (exited/crashed):
+    - docker ps -a (check STATUS column)
+
+---
+
+## QV. DOCKER COMPOSE - 10M
+
+You have successfully built the Campus Management System using Maven and pushed the application image to Docker Hub. Next, run the application along with Tomcat and containers.
+
+1. Create a multi-folder docker-compose.yml for your CampusMgmtSystem project with TomcatServer. – 5M
+   yaml
+   version: '3'
+   services:
+     tomcat:
+       image: tomcat:latest
+       ports:
+         - "8086:8080"
+     campusmgmtsystem:
+       image: yourdockerhub/campusmgmtsystem
+       ports:
+         - "7007:7007"
+   
+2. Container 1 – Access Tomcat at port 8086. – 2M
+   - Tomcat will be available at localhost:8086.
+3. Container 2 – Access your Campus Management System app at port 7007. – 3M
+   - Application available at localhost:7007.
+
+---
+
+End of Answers
